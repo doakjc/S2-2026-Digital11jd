@@ -18,7 +18,7 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(800, 500);
+  createCanvas(1200, 500);
   
   // Refresh live data every 5 minutes (300,000 ms)
   if (!USE_OFFLINE_MOCK) {
@@ -59,11 +59,13 @@ function draw() {
     let temp = aquariumData[0].exps.temperature.curr; // conditionals based on temp, diff colours
     let ph = aquariumData[0].exps.ph.curr;
     let nh3 = aquariumData[0].exps.nh3.curr;
+    let o2 = aquariumData[0].exps.o2.curr;
 
     // Call your custom graphic widgets
     drawTempWidget(50, 120, temp);
     drawGaugeWidget(300, 120, "pH Level", ph, 6.0, 8.5);
     drawGaugeWidget(550, 120, "Ammonia (NH3)", nh3, 0.0, 0.05);
+    drawGaugeWidget(800, 120, "Oxygen (O2)", o2, 0.0, 0.05);
 
   } else {
     // Loading State
