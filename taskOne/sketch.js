@@ -5,6 +5,9 @@
 // Replace this with your teacher's Cloudflare Worker URL:
 const PROXY_URL = "https://seneye-proxy.ezankov.workers.dev/";
 
+//https://www.seneye.me/pedare#p=63834
+
+
 // Toggle to true if you are working offline without network access
 const USE_OFFLINE_MOCK = false;
 
@@ -64,6 +67,11 @@ function draw() {
     // Call your custom graphic widgets
     drawTempWidget(50, 120, temp);
     drawGaugeWidget(300, 120, "pH Level", ph, 6.0, 8.5);
+    if (ph > 8) {
+      textSize(16);
+      fill('red');
+      text("This will surely affect the trout population", 300, 80);
+    }
     drawGaugeWidget(550, 120, "Ammonia (NH3)", nh3, 0.0, 0.05);
     drawGaugeWidget(800, 120, "Oxygen (O2)", o2, 0.0, 0.05);
 
