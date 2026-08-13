@@ -1,14 +1,7 @@
-// ===================================================
-// STUDENT TASK: Build a graphical dashboard for Seneye
-// ===================================================
+//API link for seneye data
+const API_URL = "https://seneye-proxy.ezankov.workers.dev/";
 
-// Replace this with your teacher's Cloudflare Worker URL:
-const PROXY_URL = "https://seneye-proxy.ezankov.workers.dev/";
-
-//https://www.seneye.me/pedare#p=63834
-
-
-// Toggle to true if you are working offline without network access
+// When set to true, will call false data from sample-data.json
 const USE_OFFLINE_MOCK = false;
 
 let aquariumData = null;
@@ -16,7 +9,7 @@ let lastUpdated = "";
 
 function preload() {
   // Load initial data before setup() runs
-  let endpoint = USE_OFFLINE_MOCK ? "sample-data.json" : PROXY_URL;
+  let endpoint = USE_OFFLINE_MOCK ? "sample-data.json" : API_URL;
   aquariumData = loadJSON(endpoint, onDataLoaded, onError);
 }
 
@@ -26,7 +19,7 @@ function setup() {
   // Refresh live data every 5 minutes (300,000 ms)
   if (!USE_OFFLINE_MOCK) {
     setInterval(() => {
-      loadJSON(PROXY_URL, onDataLoaded, onError);
+      loadJSON(API_URL, onDataLoaded, onError);
     }, 300000);
   }
 }
