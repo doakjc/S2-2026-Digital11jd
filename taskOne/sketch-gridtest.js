@@ -13,8 +13,11 @@ function preload() {
   aquariumData = loadJSON(endpoint, onDataLoaded, onError);
 }
 
+let practicalWidth = displayWidth*0.95;
+let practicalHeight = displayHeight*0.8;
+
 function setup() {
-  createCanvas(1200, 500);
+  createCanvas(displayWidth*0.95, displayHeight*0.8);
   
   // Refresh live data every 5 minutes (300,000 ms)
   if (!USE_OFFLINE_MOCK) {
