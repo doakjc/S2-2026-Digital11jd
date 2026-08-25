@@ -13,11 +13,10 @@ function preload() {
   aquariumData = loadJSON(endpoint, onDataLoaded, onError);
 }
 
-let practicalWidth = displayWidth*0.95;
-let practicalHeight = displayHeight*0.8;
-
 function setup() {
-  createCanvas(displayWidth*0.95, displayHeight*0.8);
+  let practicalWidth = displayWidth*0.95;
+  let practicalHeight = displayHeight*0.8;
+  createCanvas(practicalWidth, practicalHeight)
   
   // Refresh live data every 5 minutes (300,000 ms)
   if (!USE_OFFLINE_MOCK) {
@@ -38,21 +37,28 @@ function onError(err) {
 }
 
 function draw() {
-  background(20, 30, 45); // Dark blue aquarium background
+  background(40, 195, 245); // Dark blue aquarium background
 
   // 1. Draw Title Header
-  fill(255);
-  textSize(24);
-  textAlign(LEFT, TOP);
-  text("Fish Environment Dashboard", 30, 30);
+  // fill(255);
+  // textSize(24);
+  // textAlign(LEFT, TOP);
+  // text("Fish Environment Dashboard", 30, 30);
+
+  let practicalWidth = displayWidth*0.95;
+  let practicalHeight = displayHeight*0.8;
+  drawMainText(practicalWidth*0.05, practicalHeight*0.05, "FISH TIME");
 
   // Display connection status
   textSize(12);
-  fill(150, 200, 255);
-  text("Last updated: " + (lastUpdated || "Loading..."), 30, 65);
+  fill(0, 0, 0);
+  text("Last updated: " + (lastUpdated || "Loading..."), practicalWidth*0.5, practicalHeight*0.05);
 
   // 2. Render Dashboard Graphics
   if (aquariumData) {
+    let practicalWidth = displayWidth*0.95;
+    let practicalHeight = displayHeight*0.8;
+
     // NOTE: Update these keys based on your actual Seneye JSON response structure!
     // Example fields commonly found in sensor data:
     let temp = aquariumData[0].exps.temperature.curr; // conditionals based on temp, diff colours
@@ -60,16 +66,15 @@ function draw() {
     let nh3 = aquariumData[0].exps.nh3.curr;
     let o2 = aquariumData[0].exps.o2.curr;
 
-    // Call your custom graphic widgets
-    drawTempWidget(50, 120, temp);
-    drawGaugeWidget(300, 120, "pH Level", ph, 6.0, 8.5);
+    drawTempWidget(practicalWidth*0.05, practicalHeight*0.5, temp);
+    drawGaugeWidget(practicalWidth*0.28, practicalHeight*0.5, "pH Level", ph, 6.0, 8.5);
     if (ph > 8) {
-      textSize(16);
-      fill('red');
-      text("This will surely affect the trout population", 300, 80);
-    }
-    drawGaugeWidget(550, 120, "Ammonia (NH3)", nh3, 0.0, 0.05);
-    drawGaugeWidget(800, 120, "Oxygen (O2)", o2, 0.0, 0.05);
+    //   textSize(16);
+    //   fill('red');
+    //   text("This will surely affect the trout population", 300, 80);
+}
+    drawGaugeWidget(practicalWidth*0.53, practicalHeight*0.5, "Ammonia (NH3)", nh3, 0.0, 0.05);
+    drawGaugeWidget(practicalWidth*0.76, practicalHeight*0.5, "Oxygen (O2)", o2, 0.0, 0.05);
 
   } else {
     // Loading State
@@ -81,35 +86,56 @@ function draw() {
 
 // Example Widget Function: Temperature Card
 function drawTempWidget(x, y, tempVal) {
+  let practicalWidth = displayWidth*0.95;
+  let practicalHeight = displayHeight*0.8;
   // Background Card
-  fill(35, 48, 68);
-  stroke(60, 80, 110);
-  rect(x, y, 200, 150, 10);
+  fill(43, 124, 199);
+  strokeWeight(3);
+  stroke(0, 0, 0);
+  rect(x, y, practicalWidth*0.25*0.8, practicalHeight*0.25*0.8, 10);
 
   // Label
   noStroke();
-  fill(180, 200, 220);
-  textSize(14);
-  text("Water Temp", x + 15, y + 15);
+  fill(0, 0, 0);
+  textSize(18);
+  text("Water Temp", x + practicalWidth*0.01875, y + practicalHeight*0.03);
 
   // Value Display
-  fill(100, 220, 255);
+  fill(0, 0, 0);
   textSize(36);
-  text(tempVal + "°C", x + 15, y + 50);
+  text(tempVal + "°C", x + practicalWidth*0.01875, y + practicalHeight*0.1);
 }
 
 // Example Widget Function: Simple Bar Gauge
 function drawGaugeWidget(x, y, label, val, minVal, maxVal) {
-  fill(35, 48, 68);
-  stroke(60, 80, 110);
-  rect(x, y, 200, 150, 10);
+  let practicalWidth = displayWidth*0.95;
+  let practicalHeight = displayHeight*0.8;
+  fill(43, 124, 199);
+  strokeWeight(3);
+  stroke(0, 0, 0);
+  rect(x, y, practicalWidth*0.25*0.8, practicalHeight*0.25*0.8, 10);
 
   noStroke();
-  fill(180, 200, 220);
-  textSize(14);
-  text(label, x + 15, y + 15);
+  fill(0, 0, 0);
+  textSize(18);
+  text(label, x + practicalWidth*0.01875, y + practicalHeight*0.03);
 
-  fill(255);
+  fill(0, 0, 0);
   textSize(28);
-  text(val, x + 15, y + 50);
+  text(val, x + practicalWidth*0.01875, y + practicalHeight*0.1);
+}
+
+function drawMainText(x,y, label) {
+  let practicalWidth = displayWidth*0.95;
+  let practicalHeight = displayHeight*0.8;
+  fill(255, 0, 0);
+  strokeWeight(3);
+  stroke(0, 0, 0);
+  rect(x, y, practicalWidth*0.5*0.8, practicalHeight*0.25*0.8, 10);
+
+  noStroke();
+  fill(0, 0, 0);
+  textSize(18);
+  text(label, x + practicalWidth*0.01875, y + practicalHeight*0.03);
+
 }
