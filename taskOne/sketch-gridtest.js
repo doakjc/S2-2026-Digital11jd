@@ -11,6 +11,7 @@ function preload() {
   // Load initial data before setup() runs
   let endpoint = USE_OFFLINE_MOCK ? "sample-data.json" : API_URL;
   aquariumData = loadJSON(endpoint, onDataLoaded, onError);
+  fish = loadImage("images/fish.png");
 }
 
 function setup() {
@@ -47,7 +48,7 @@ function draw() {
 
   let practicalWidth = displayWidth*0.95;
   let practicalHeight = displayHeight*0.8;
-  drawMainText(practicalWidth*0.05, practicalHeight*0.05, "FISH TIME");
+  drawMainText(practicalWidth*0.05, practicalHeight*0.05, "PEDARE AQUAPONICS DASHBOARD");
 
   // Display connection status
   textSize(12);
@@ -61,20 +62,28 @@ function draw() {
 
     // NOTE: Update these keys based on your actual Seneye JSON response structure!
     // Example fields commonly found in sensor data:
-    let temp = aquariumData[0].exps.temperature.curr; // conditionals based on temp, diff colours
+    let temp = aquariumData[0].exps.temperature.curr;
+    let tempStatus = aquariumData[0].exps.temperature.status;
     let ph = aquariumData[0].exps.ph.curr;
+    let phStatus = aquariumData[0].exps.ph.status;
     let nh3 = aquariumData[0].exps.nh3.curr;
+    let nh3Status = aquariumData[0].exps.nh3.status;
     let o2 = aquariumData[0].exps.o2.curr;
+    let o2Status = aquariumData[0].exps.o2.status;
 
-    drawTempWidget(practicalWidth*0.05, practicalHeight*0.5, temp);
-    drawGaugeWidget(practicalWidth*0.28, practicalHeight*0.5, "pH Level", ph, 6.0, 8.5);
-    if (ph > 8) {
-    //   textSize(16);
-    //   fill('red');
-    //   text("This will surely affect the trout population", 300, 80);
-}
-    drawGaugeWidget(practicalWidth*0.53, practicalHeight*0.5, "Ammonia (NH3)", nh3, 0.0, 0.05);
-    drawGaugeWidget(practicalWidth*0.76, practicalHeight*0.5, "Oxygen (O2)", o2, 0.0, 0.05);
+    console.log(tempStatus);
+
+    drawTempWidget(practicalWidth*0.05, practicalHeight*0.5, temp, tempStatus);
+    drawGaugeWidget(practicalWidth*0.28, practicalHeight*0.5, "pH Level", ph, 6.0, 8.5, phStatus);
+//     if (ph > 8) {
+//       textSize(16);
+//       fill('red');
+//       text("This will surely affect the trout population", 300, 80);
+// }
+    drawGaugeWidget(practicalWidth*0.53, practicalHeight*0.5, "Ammonia (NH3)", nh3, 0.0, 0.05, nh3Status);
+    drawGaugeWidget(practicalWidth*0.76, practicalHeight*0.5, "Oxygen (O2)", o2, 0.0, 0.05, o2Status);
+
+    drawFish(practicalWidth*0.8, practicalHeight*0.25)
 
   } else {
     // Loading State
@@ -85,7 +94,7 @@ function draw() {
 }
 
 // Example Widget Function: Temperature Card
-function drawTempWidget(x, y, tempVal) {
+function drawTempWidget(x, y, tempVal, status) {
   let practicalWidth = displayWidth*0.95;
   let practicalHeight = displayHeight*0.8;
   // Background Card
@@ -104,10 +113,17 @@ function drawTempWidget(x, y, tempVal) {
   fill(0, 0, 0);
   textSize(36);
   text(tempVal + "°C", x + practicalWidth*0.01875, y + practicalHeight*0.1);
+
+  if (status == 1 ) {
+    fill("red");
+    textSize(36);
+    text("Warning", x + practicalWidth *0.04, y + practicalHeight *0.15);  
+
+  }
 }
 
 // Example Widget Function: Simple Bar Gauge
-function drawGaugeWidget(x, y, label, val, minVal, maxVal) {
+function drawGaugeWidget(x, y, label, val, minVal, maxVal, status) {
   let practicalWidth = displayWidth*0.95;
   let practicalHeight = displayHeight*0.8;
   fill(43, 124, 199);
@@ -123,9 +139,34 @@ function drawGaugeWidget(x, y, label, val, minVal, maxVal) {
   fill(0, 0, 0);
   textSize(28);
   text(val, x + practicalWidth*0.01875, y + practicalHeight*0.1);
+
+  if (status == 1 ) {
+    fill("red");
+    textSize(36);
+    text("Warning", x + practicalWidth *0.04, y + practicalHeight *0.15);  
+
+  }
 }
 
 function drawMainText(x,y, label) {
+  let practicalWidth = displayWidth*0.95;
+  let practicalHeight = displayHeight*0.8;
+  colorMode(HSB, 360, 100, 100);
+  let currentHue = (frameCount * 2) % 360;
+  fill(currentHue, 100, 100);
+  colorMode(RGB)
+  strokeWeight(3);
+  stroke(0, 0, 0);
+  rect(x, y, practicalWidth*0.5*0.8, practicalHeight*0.25*0.8, 10);
+
+  noStroke();
+  fill(0, 0, 0);
+  textSize();
+  text(label, x + practicalWidth*0.01875, y + practicalHeight*0.1);
+
+}
+
+function drawSummary(x,y, label) {
   let practicalWidth = displayWidth*0.95;
   let practicalHeight = displayHeight*0.8;
   fill(255, 0, 0);
@@ -138,4 +179,16 @@ function drawMainText(x,y, label) {
   textSize(18);
   text(label, x + practicalWidth*0.01875, y + practicalHeight*0.03);
 
+}
+
+function drawFish(x,y) {
+
+  push();
+  imageMode(CENTER);
+  let angle = frameCount * 0.01;
+  translate(x,y)
+  rotate(angle);
+  translate(-x,-y)
+  image(fish, x, y, 500, 500)
+  pop();
 }
