@@ -12,6 +12,7 @@ function preload() {
   let endpoint = USE_OFFLINE_MOCK ? "sample-data.json" : API_URL;
   aquariumData = loadJSON(endpoint, onDataLoaded, onError);
   fish = loadImage("images/fish.png");
+  onefish = loadImage("images/onefish.png");
 }
 
 function setup() {
@@ -64,26 +65,38 @@ function draw() {
     // Example fields commonly found in sensor data:
     let temp = aquariumData[0].exps.temperature.curr;
     let tempStatus = aquariumData[0].exps.temperature.status;
+    let tempAvg = aquariumData[0].exps.temperature.avg;
+
     let ph = aquariumData[0].exps.ph.curr;
     let phStatus = aquariumData[0].exps.ph.status;
+    let phAvg = aquariumData[0].exps.ph.avg;
+
     let nh3 = aquariumData[0].exps.nh3.curr;
     let nh3Status = aquariumData[0].exps.nh3.status;
+    let nh3Avg = aquariumData[0].exps.nh3.avg;
+
     let o2 = aquariumData[0].exps.o2.curr;
     let o2Status = aquariumData[0].exps.o2.status;
+    let o2Avg = aquariumData[0].exps.o2.avg;
 
     console.log(tempStatus);
 
-    drawTempWidget(practicalWidth*0.05, practicalHeight*0.5, temp, tempStatus);
+    drawTempWidget(practicalWidth*0.05, practicalHeight*0.5, temp, tempStatus, "Water Temperature");
+    drawTempWidget(practicalWidth*0.05, practicalHeight*0.75, temp, tempAvg, "Temperature Average");
+
     drawGaugeWidget(practicalWidth*0.28, practicalHeight*0.5, "pH Level", ph, 6.0, 8.5, phStatus);
-//     if (ph > 8) {
-//       textSize(16);
-//       fill('red');
-//       text("This will surely affect the trout population", 300, 80);
-// }
+    drawGaugeWidget(practicalWidth*0.28, practicalHeight*0.75, "pH Average", ph, 6.0, 8.5, phAvg);
+
     drawGaugeWidget(practicalWidth*0.53, practicalHeight*0.5, "Ammonia (NH3)", nh3, 0.0, 0.05, nh3Status);
+    drawGaugeWidget(practicalWidth*0.53, practicalHeight*0.75, "Ammonia Average", nh3, 0.0, 0.05, nh3Avg);
+
     drawGaugeWidget(practicalWidth*0.76, practicalHeight*0.5, "Oxygen (O2)", o2, 0.0, 0.05, o2Status);
+    drawGaugeWidget(practicalWidth*0.76, practicalHeight*0.75, "Oxygen Average", o2, 0.0, 0.05, o2Avg);
+
 
     drawFish(practicalWidth*0.8, practicalHeight*0.25)
+
+    drawFish2(0, practicalHeight*0.5)
 
   } else {
     // Loading State
@@ -94,7 +107,7 @@ function draw() {
 }
 
 // Example Widget Function: Temperature Card
-function drawTempWidget(x, y, tempVal, status) {
+function drawTempWidget(x, y, tempVal, status, label) {
   let practicalWidth = displayWidth*0.95;
   let practicalHeight = displayHeight*0.8;
   // Background Card
@@ -107,7 +120,7 @@ function drawTempWidget(x, y, tempVal, status) {
   noStroke();
   fill(0, 0, 0);
   textSize(18);
-  text("Water Temp", x + practicalWidth*0.01875, y + practicalHeight*0.03);
+  text(label, x + practicalWidth*0.01875, y + practicalHeight*0.03);
 
   // Value Display
   fill(0, 0, 0);
@@ -117,7 +130,7 @@ function drawTempWidget(x, y, tempVal, status) {
   if (status == 1 ) {
     fill("red");
     textSize(36);
-    text("Warning", x + practicalWidth *0.04, y + practicalHeight *0.15);  
+    text("Warning!", x + practicalWidth *0.04, y + practicalHeight *0.15);  
 
   }
 }
@@ -141,10 +154,11 @@ function drawGaugeWidget(x, y, label, val, minVal, maxVal, status) {
   text(val, x + practicalWidth*0.01875, y + practicalHeight*0.1);
 
   if (status == 1 ) {
+    if (frameCount % 60 < 30) {
     fill("red");
     textSize(36);
-    text("Warning", x + practicalWidth *0.04, y + practicalHeight *0.15);  
-
+    text("Warning!", x + practicalWidth *0.04, y + practicalHeight *0.15);  
+    }
   }
 }
 
@@ -182,7 +196,6 @@ function drawSummary(x,y, label) {
 }
 
 function drawFish(x,y) {
-
   push();
   imageMode(CENTER);
   let angle = frameCount * 0.01;
@@ -190,5 +203,16 @@ function drawFish(x,y) {
   rotate(angle);
   translate(-x,-y)
   image(fish, x, y, 500, 500)
+  pop();
+}
+
+function drawFish2(x,y) {
+  push();
+  imageMode(CENTER);
+  x = frameCount % (displayWidth*0.95);
+  y = sin(frameCount/5)
+  translate(x,y)
+  image(onefish, x, ((y*2)+(displayHeight*0.5)), 500, 500)
+  translate(-x,-y)
   pop();
 }
