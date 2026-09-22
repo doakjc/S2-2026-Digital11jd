@@ -39,13 +39,7 @@ function onError(err) {
 }
 
 function draw() {
-  background(40, 195, 245); // Dark blue aquarium background
-
-  // 1. Draw Title Header
-  // fill(255);
-  // textSize(24);
-  // textAlign(LEFT, TOP);
-  // text("Fish Environment Dashboard", 30, 30);
+  background(40, 195, 245); 
 
   let practicalWidth = displayWidth*0.95;
   let practicalHeight = displayHeight*0.8;
@@ -56,13 +50,10 @@ function draw() {
   fill(0, 0, 0);
   text("Last updated: " + (lastUpdated || "Loading..."), practicalWidth*0.5, practicalHeight*0.05);
 
-  // 2. Render Dashboard Graphics
   if (aquariumData) {
     let practicalWidth = displayWidth*0.95;
     let practicalHeight = displayHeight*0.8;
 
-    // NOTE: Update these keys based on your actual Seneye JSON response structure!
-    // Example fields commonly found in sensor data:
     let temp = aquariumData[0].exps.temperature.curr;
     let tempStatus = aquariumData[0].exps.temperature.status;
     let tempAvg = aquariumData[0].exps.temperature.avg;
@@ -70,6 +61,8 @@ function draw() {
     let ph = aquariumData[0].exps.ph.curr;
     let phStatus = aquariumData[0].exps.ph.status;
     let phAvg = aquariumData[0].exps.ph.avg;
+    console.log(ph);
+    console.log(phAvg)
 
     let nh3 = aquariumData[0].exps.nh3.curr;
     let nh3Status = aquariumData[0].exps.nh3.status;
@@ -78,8 +71,6 @@ function draw() {
     let o2 = aquariumData[0].exps.o2.curr;
     let o2Status = aquariumData[0].exps.o2.status;
     let o2Avg = aquariumData[0].exps.o2.avg;
-
-    console.log(tempStatus);
 
     drawTempWidget(practicalWidth*0.05, practicalHeight*0.5, temp, tempStatus, "Water Temperature");
     drawTempWidget(practicalWidth*0.05, practicalHeight*0.75, temp, tempAvg, "Temperature Average");
@@ -106,26 +97,22 @@ function draw() {
   }
 }
 
-// Example Widget Function: Temperature Card
 function drawTempWidget(x, y, tempVal, status, label) {
   let practicalWidth = displayWidth*0.95;
   let practicalHeight = displayHeight*0.8;
-  // Background Card
   fill(43, 124, 199);
   strokeWeight(3);
   stroke(0, 0, 0);
   rect(x, y, practicalWidth*0.25*0.8, practicalHeight*0.25*0.8, 10);
 
-  // Label
   noStroke();
   fill(0, 0, 0);
   textSize(18);
   text(label, x + practicalWidth*0.01875, y + practicalHeight*0.03);
 
-  // Value Display
   fill(0, 0, 0);
   textSize(36);
-  text(tempVal + "°C", x + practicalWidth*0.01875, y + practicalHeight*0.1);
+  text(tempVal + "°C", x + practicalWidth*0.01875, y + practicalHeight *0.1);
 
   if (status == 1 ) {
     fill("red");
@@ -135,7 +122,6 @@ function drawTempWidget(x, y, tempVal, status, label) {
   }
 }
 
-// Example Widget Function: Simple Bar Gauge
 function drawGaugeWidget(x, y, label, val, minVal, maxVal, status) {
   let practicalWidth = displayWidth*0.95;
   let practicalHeight = displayHeight*0.8;
@@ -216,3 +202,4 @@ function drawFish2(x,y) {
   translate(-x,-y)
   pop();
 }
+
