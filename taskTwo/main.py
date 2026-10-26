@@ -1,23 +1,4 @@
-from datetime import date
 import requests
-barcode = 3033710065967 #3017624010701
-
-#3017624010701
-url = f"https://world.openfoodfacts.org/api/v2/product/{barcode}"
-headers = {
-   "User-Agent": "MyBarcodeApp/1.0"
-}
-
-response = requests.get(url, headers=headers)
-data = response.json()
-
-product_name = data.get("product", {}).get("product_name", "Product name not found")
-ingredients = data.get("product", {}).get("ingredients_text_en", "Product name not found")
-
-nutriscore = data.get("product", {}).get("nutriscore_grade")
-sugar = data.get("product", {}).get("nutriments", {}).get("sugars_prepared_100g")
-carbohydrates = data.get("product", {}).get("nutriments", {}).get("carbohydrates_prepared_100g")
-protein = data.get("product", {}).get("nutriments", {}).get("proteins_prepared_100g")
 
 def get_recommendation(grade, sugars, carbs, proteins):
     output = ""
@@ -68,19 +49,53 @@ def get_recommendation(grade, sugars, carbs, proteins):
         
     return output
 
+def call_food_data(product_name, ingredients, nutriscore, sugar, carbohydrates, protein):
+    print(f"\nProduct Name: {product_name}")
+    print(f"Ingredients: {ingredients}")
+    print(get_recommendation(nutriscore, sugar, carbohydrates, protein))
+
 def print_menu():
-    print("1. View Product Information")
-    print("2. Exit")
+    print("1. Set Barcode")
+    print("2. View Product Information")
+    print("3. Exit")
 
 def main():
+    barcode = 3033710065967
     while True:
         print_menu()
         choice = input("Enter your choice: ")
         if choice == "1":
-            print(f"Product Name: {product_name}")
-            print(f"Ingredients: {ingredients}")
-            print(get_recommendation(nutriscore, sugar, carbohydrates, protein))
+            while True:
+                barcode = input("Enter a Barcode Number (or enter E to exit): ")
+                if barcode.upper() == "E":
+                    break
+                else:
+                    url = f"https://world.openfoodfacts.org/api/v2/product/{barcode}"
+                    headers = {"User-Agent": "MyBarcodeApp/1.0/doakjc@pedarecc.sa.edu.au"}
+                    response = requests.get(url, headers=headers)
+                    data = response.json()
+                    print(data.get("status"))
+                    if data.get("status") == 1:
+                        print(f"Valid Barcode Number!\n Current Barcode set to {barcode}\n")
+                        break
+                    else:
+                        print("Invalid Barcode Number")
+            
         elif choice == "2":
+            url = f"https://world.openfoodfacts.org/api/v2/product/{barcode}"
+            headers = {"User-Agent": "MyBarcodeApp/1.0/doakjc@pedarecc.sa.edu.au"}
+            response = requests.get(url, headers=headers)
+            data = response.json()
+        
+            product_name = data.get("product", {}).get("product_name", "Product name not found")
+            ingredients = data.get("product", {}).get("ingredients_text_en", "Product name not found")
+            nutriscore = data.get("product", {}).get("nutriscore_grade")
+            sugar = data.get("product", {}).get("nutriments", {}).get("sugars_prepared_100g")
+            carbohydrates = data.get("product", {}).get("nutriments", {}).get("carbohydrates_prepared_100g")
+            protein = data.get("product", {}).get("nutriments", {}).get("proteins_prepared_100g")
+
+            call_food_data(product_name, ingredients, nutriscore, sugar, carbohydrates, protein)
+        elif choice == "3":
             break
         else:
             print("Invalid choice. Please try again.")
