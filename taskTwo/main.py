@@ -98,9 +98,12 @@ def main():
 
             call_food_data(product_name, ingredients, nutriscore, sugar, carbohydrates, protein)
         elif choice == "3":
+            print("\nSaved Products:")
             for barcode, product in products.items():
-                print(f"\nSaved Products: \n{barcode}: {product}\n")
+                print(f"{barcode}: {product}")
+            print("\n")
         elif choice == "4":
+            print("Exiting Program")
             break
         else:
             print("Invalid choice. Please try again.")
