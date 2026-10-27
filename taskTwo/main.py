@@ -57,9 +57,11 @@ def call_food_data(product_name, ingredients, nutriscore, sugar, carbohydrates, 
 def print_menu():
     print("1. Set Barcode")
     print("2. View Product Information")
-    print("3. Exit")
+    print("3. View Stored Products")
+    print("4. Exit")
 
 def main():
+    products = {3033710065967:"NESQUIK Cacao"}
     barcode = 3033710065967
     while True:
         print_menu()
@@ -77,6 +79,7 @@ def main():
                     print(data.get("status"))
                     if data.get("status") == 1:
                         print(f"Valid Barcode Number!\n Current Barcode set to {barcode}\n")
+                        products[barcode] = data.get("product", {}).get("product_name", "Product name not found")
                         break
                     else:
                         print("Invalid Barcode Number")
@@ -86,7 +89,6 @@ def main():
             headers = {"User-Agent": "MyBarcodeApp/1.0/doakjc@pedarecc.sa.edu.au"}
             response = requests.get(url, headers=headers)
             data = response.json()
-        
             product_name = data.get("product", {}).get("product_name", "Product name not found")
             ingredients = data.get("product", {}).get("ingredients_text_en", "Product name not found")
             nutriscore = data.get("product", {}).get("nutriscore_grade")
@@ -96,13 +98,14 @@ def main():
 
             call_food_data(product_name, ingredients, nutriscore, sugar, carbohydrates, protein)
         elif choice == "3":
+            for barcode, product in products.items():
+                print(f"\nSaved Products: \n{barcode}: {product}\n")
+        elif choice == "4":
             break
         else:
             print("Invalid choice. Please try again.")
 
 if __name__ == "__main__":
     main()
-
-
 
 
